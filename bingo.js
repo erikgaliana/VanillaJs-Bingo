@@ -68,7 +68,7 @@ var player ={ userName:"" , rounds:0}
                                         }
             if ( checkBingo(bingoCard)) { 
                 alert( " BINGO !!!!");
-                nextTurn===false;
+                nextTurn=false;
             }
         }
         //console.log(bingoCard);
