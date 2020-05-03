@@ -16,20 +16,20 @@ function Bingo (){
     var lineCalled=false;
     var isLine=false;
     var isWinner=false;
-    var arrayScore=[];
+    var arrayScore;
     var nextTurn;
     
     do {
         
+
         player ={ userName:"" , rounds:0, points:0};
     
         player.userName=prompt("Introduce tu nombre");
         alert (`Bienvenido ${player.userName}`);
+        
+        arrayScore=[];//init array of scores before loading scores in local Storage;
 
         getSavedScore (arrayScore);
-
-        console.log("array score out of savedscore ", arrayScore);
-       
 
         showScore ( arrayScore);
         
@@ -69,7 +69,7 @@ function Bingo (){
                     isLine=checkCard(bingoCard,bingoNumbers);
                     
                     player.rounds+=1;
-                    //player.points+=(45-player.rounds)*10;
+                    
 
                     console.log(`turno : ${player.rounds}`);
 
@@ -78,13 +78,13 @@ function Bingo (){
                     if ( isLine && !lineCalled) { 
                                                 alert( "LINEA");
                                                 lineCalled=true;  
-                                                player.points+=(45-player.rounds)*100;  
+                                                player.points+=((45-player.rounds)*100);  
                                                 }
                     isWinner=checkBingo(bingoCard);
                     if ( checkBingo(bingoCard)) { 
                         alert( " BINGO !!!!");
                         nextTurn=false;
-                        player.points+=(45-player.rounds)*100;
+                        player.points+=((45-player.rounds)*100);
                     }
                     console.log(`Puntuacion actual = ${player.points}`);
                 }
@@ -279,13 +279,17 @@ function saveScore (arrayScore) {
 
     */
 
-    console.log(" array score before pushin to local store");
+   
 
-   console.log('local storage before saving arrayScore',JSON.parse(localStorage.getItem('scores')));    
+   //console.log('local storage before saving arrayScore',JSON.parse(localStorage.getItem('scores')));    
+
+   //localStorage.removeItem('scores');
+
+   //console.log('local storege after reset',JSON.parse(localStorage.getItem('scores')));  
 
    localStorage.setItem('scores', JSON.stringify(arrayScore));
 
-   console.log('local store after saving arrayScore',JSON.parse(localStorage.getItem('scores')));
+   //console.log('local store after saving arrayScore',JSON.parse(localStorage.getItem('scores')));
 
 }
 
