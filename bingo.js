@@ -77,17 +77,17 @@ function Bingo (){
                     console.log(`turno : ${player.rounds}`);
 
                     showCard(bingoCard);
-                 
+
                     if ( isLine && !lineCalled) { 
                                                 alert( "LINEA");
                                                 lineCalled=true;  
-                                                player.points+=((50-player.rounds)*25);  
+                                                player.points+=((90-player.rounds)*10);  
                                                 }
                     isWinner=checkBingo(bingoCard);
                     if ( checkBingo(bingoCard)) { 
                         alert( " BINGO !!!!");
                         nextTurn=false;
-                        player.points+=((50-player.rounds)*100);
+                        player.points+=((90-player.rounds)*100);
                     }
                     console.log(`Puntuacion actual = ${player.points}`);
                 }
@@ -117,10 +117,10 @@ function Bingo (){
 
 
 
-
+// init array with numbers from 1 to 90;
 function initBingo(bingoNumbers){
     
-    for (var i=0; i<50; i++) {
+    for (var i=0; i<90; i++) {
         bingoNumbers.push(i+1);
     }
     
@@ -128,7 +128,7 @@ function initBingo(bingoNumbers){
 
 
 
-
+// init card with random numbers
 function initCard(bingoCard,bingoNumbers){
     
     var numberToInsert = { number: 0 , matched: false };
@@ -148,7 +148,7 @@ function initCard(bingoCard,bingoNumbers){
 
 
 
-
+// selects a random number from bingo number and deletes from array
 function randomNumber(bingoNumbers){
     var selectedNumber;
     var chosenIndex;
@@ -162,7 +162,7 @@ function randomNumber(bingoNumbers){
 
 
 
-
+// show card
 function showCard ( bingoCard){
 
     
@@ -193,7 +193,7 @@ function showCard ( bingoCard){
 }
 
 
-
+//Check if number is in Card
 function checkCard (bingoCard,bingoNumbers){
     
    var newNumber= randomNumber(bingoNumbers);
@@ -229,7 +229,7 @@ function checkCard (bingoCard,bingoNumbers){
 }
 
 
-
+// check if line
 function checkLine ( bingoCard,i,j) {
   
     const arrayLine= bingoCard.slice(i,j).filter(element=>element.matched===true);
@@ -239,7 +239,7 @@ function checkLine ( bingoCard,i,j) {
 }
 
 
-
+// check if bingo
 function checkBingo( bingoCard) {
   
     const arrayBingo= bingoCard.filter(element=>element.matched===true);
@@ -256,7 +256,7 @@ function sortScore ( arrayScore) {
 }
 
 
-
+// sets criteria to sort
 function compare(a, b) {
    
     if (a.points > b.points) return -1;
