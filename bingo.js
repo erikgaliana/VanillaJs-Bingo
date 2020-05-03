@@ -7,75 +7,81 @@ Bingo();
 /*************** Bingo Function starts Game ****/
 function Bingo (){
 
-var player ={ userName:"" , rounds:0}
+    var player ={ userName:"" , rounds:0, points:0};
 
- player.userName=prompt("Introduce tu nombre");
- alert (`bienvenido ${player.userName}`);
+    player.userName=prompt("Introduce tu nombre");
+    alert (`Bienvenido ${player.userName}`);
 
- var bingoNumbers; 
- var bingoCard;
-
- var agreeCard=false;
- var counter=0;
- var isLine=false;
- var lineCalled=false;
- 
- 
- do {
-
-    bingoNumbers=[]; 
-    bingoCard=[];
-
-    // init array of numbers
-    initBingo(bingoNumbers);
-
-    // init bingo Card
-    initCard(bingoCard,bingoNumbers);
-        
-    // reinit bingo numbers to have all numbers
-    // again available
-
-    bingoNumbers=[]; 
-    initBingo(bingoNumbers);
+    var agreeCard=false;
+    var bingoNumbers; 
+    var bingoCard;
+    var continueGame=false;
+    var lineCalled=false;
+    var isLine=false;
+    var isWinner=false;
+   
     
-    showCard(bingoCard);
+    do {
+        do {
 
-    agreeCard = window.confirm("Aceptas este carton ?");
+            bingoNumbers=[]; 
+            bingoCard=[];
 
- 
- } while (agreeCard===false);
+            // init array of numbers
+            initBingo(bingoNumbers);
 
- var nextTurn;
+            // init bingo Card
+            initCard(bingoCard,bingoNumbers);
+                
+            // reinit bingo numbers to have all numbers
+            // again available
 
- console.log(" iniciando partida");
- 
- do {
-        nextTurn=window.confirm("Avanzar al siguiente turno ?");
-
-        if(nextTurn) {
-
-            isLine=checkCard(bingoCard,bingoNumbers);
+            bingoNumbers=[]; 
+            initBingo(bingoNumbers);
             
-            counter+=1;
-
-            console.log(`turno : ${counter}`);
-
             showCard(bingoCard);
-            
-            if ( isLine && !lineCalled) { 
-                                        alert( "LINEA");
-                                        lineCalled=true;    
-                                        }
-            if ( checkBingo(bingoCard)) { 
-                alert( " BINGO !!!!");
-                nextTurn=false;
-            }
-        }
-        //console.log(bingoCard);
-        //console.log(bingoNumbers);
-    } while (nextTurn===true);
- 
 
+            agreeCard = window.confirm("Aceptas este carton ?");
+
+        
+        } while (agreeCard===false);
+
+        var nextTurn;
+
+        console.log(" iniciando partida");
+        
+        do {
+                nextTurn=window.confirm("Avanzar al siguiente turno ?");
+
+                if(nextTurn) {
+
+                    isLine=checkCard(bingoCard,bingoNumbers);
+                    
+                    player.rounds+=1;
+
+                    console.log(`turno : ${player.rounds}`);
+
+                    showCard(bingoCard);
+                    
+                    if ( isLine && !lineCalled) { 
+                                                alert( "LINEA");
+                                                lineCalled=true;    
+                                                }
+                    isWinner=checkBingo(bingoCard);
+                    if ( checkBingo(bingoCard)) { 
+                        alert( " BINGO !!!!");
+                        nextTurn=false;
+                    }
+                }
+                //console.log(bingoCard);
+                //console.log(bingoNumbers);
+            } while (nextTurn===true);
+    
+        isWinner? console.log(`Felicidades has ganado en ${player.rounds} turnos`): console.log (`Juego finalizado en ${player.rounds} turnos` );
+        
+        continueGame = window.confirm(" ¿ Quieres jugar otra partida ? ");
+
+    } while ( continueGame===true);
 }
 
 
@@ -190,7 +196,8 @@ function checkCard (bingoCard,bingoNumbers){
    }
 
    alert(`numero generado por el bombo : ${newNumber}`);
-   console.log(`numero generado por el bombo : ${newNumber}`)
+   console.log(`numero generado por el bombo : ${newNumber}`);
+
    return line;
 }
 
@@ -198,9 +205,6 @@ function checkCard (bingoCard,bingoNumbers){
 function checkLine ( bingoCard,i,j) {
   
     const arrayLine= bingoCard.slice(i,j).filter(element=>element.matched===true);
-
-    //console.log ("linea1",bingoCard.slice(i,j));
-    //console.log( " arrayLine", arrayLine);
 
     return ( arrayLine.length===5?  true : false);
     
