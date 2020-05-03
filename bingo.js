@@ -7,11 +7,11 @@ Bingo();
 /*************** Bingo Function starts Game ****/
 function Bingo (){
 
-    var player ={ userName:"" , rounds:0, points:0};
-
+    var player ={ userName:"" , rounds:0, points:45*100};
+    
     player.userName=prompt("Introduce tu nombre");
     alert (`Bienvenido ${player.userName}`);
-
+    
     var agreeCard=false;
     var bingoNumbers; 
     var bingoCard;
@@ -19,9 +19,12 @@ function Bingo (){
     var lineCalled=false;
     var isLine=false;
     var isWinner=false;
+    var arrayScore=[];
    
     
     do {
+        
+        
         do {
 
             bingoNumbers=[]; 
@@ -58,6 +61,7 @@ function Bingo (){
                     isLine=checkCard(bingoCard,bingoNumbers);
                     
                     player.rounds+=1;
+                    player.points+=-100;
 
                     console.log(`turno : ${player.rounds}`);
 
@@ -65,23 +69,34 @@ function Bingo (){
                     
                     if ( isLine && !lineCalled) { 
                                                 alert( "LINEA");
-                                                lineCalled=true;    
+                                                lineCalled=true;  
+                                                player.points+=(45-player.rounds)*100;  
                                                 }
                     isWinner=checkBingo(bingoCard);
                     if ( checkBingo(bingoCard)) { 
                         alert( " BINGO !!!!");
                         nextTurn=false;
+                        player.points+=(45-player.rounds)*100;
                     }
+                    console.log(`Puntuacion actual = ${player.points}`);
                 }
-                //console.log(bingoCard);
-                //console.log(bingoNumbers);
+               
             } while (nextTurn===true);
     
         isWinner? console.log(`Felicidades has ganado en ${player.rounds} turnos`): console.log (`Juego finalizado en ${player.rounds} turnos` );
         
+       arrayScore.push({...player});
+        sortScore(arrayScore);
+
+        saveScore(arrayScore);
+        showSavedScore( arrayScore) ;
+        
+
         continueGame = window.confirm(" ¿ Quieres jugar otra partida ? ");
 
     } while ( continueGame===true);
+
+
 }
 
 
@@ -180,7 +195,9 @@ function checkCard (bingoCard,bingoNumbers){
         if ( bingoCard[i].number===newNumber) {
            
             bingoCard[i].matched=true;
-            // check if this line has all items matched to get Line
+            
+            // below we check where index is and pass to the function the first and the last index of the file
+
             if( i<5) { x=0;
                        y=5} 
                     else if ( i<10)
@@ -188,9 +205,9 @@ function checkCard (bingoCard,bingoNumbers){
                        y=10}
                          else { x=10;
                                 y=15 }
-            // we pass to the function the first and the last index of the file
+            // check if this line has all items matched to get Line
             line=checkLine(bingoCard,x,y);
-            break;
+            break; // once we found matched numbre there's no need to continue the loop
         }
 
    }
@@ -217,6 +234,34 @@ function checkBingo( bingoCard) {
     return ( arrayBingo.length===15?  true : false);
     
 }
+
+function sortScore ( arrayScore) {
+     
+      arrayScore.sort(compare);
+}
+
+function compare(a, b) {
+   
+    if (a.points > b.points) return 1;
+    if (b.points > a.points) return -1;
+  
+    return 0;
+  }
+
+function saveScore (arrayScore) {
+
+    localStorage.setItem('scores', JSON.stringify(arrayScore));
+
+}
+
+function showSavedScore ( arrayScore) {
+   
+    var savedScores = JSON.parse(localStorage.getItem('scores'));
+
+    console.log('savedScores', savedScores);
+
+}
+
 
 /*
 function generateNumber (){
