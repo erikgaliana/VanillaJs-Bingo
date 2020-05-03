@@ -24,6 +24,7 @@ function Bingo (){
     
     do {
         
+        showSavedScore ( arrayScore);
         
         do {
 
@@ -242,23 +243,45 @@ function sortScore ( arrayScore) {
 
 function compare(a, b) {
    
-    if (a.points > b.points) return 1;
-    if (b.points > a.points) return -1;
+    if (a.points > b.points) return -1;
+    if (b.points > a.points) return 1;
   
     return 0;
   }
 
+
 function saveScore (arrayScore) {
 
-    localStorage.setItem('scores', JSON.stringify(arrayScore));
+    if ( localStorage.getItem('scores')!=null){ 
 
+        var savedScores = JSON.parse(localStorage.getItem('scores'));
+
+        var combinedArrays=[...savedScores,...arrayScore];
+
+        sortScore ( combinedArrays);
+        
+
+    localStorage.setItem('scores', JSON.stringify(combinedArrays));
+    }
+    else { localStorage.setItem('scores', JSON.stringify(arrayScore));}
 }
 
 function showSavedScore ( arrayScore) {
    
-    var savedScores = JSON.parse(localStorage.getItem('scores'));
+    if ( localStorage.getItem('scores')!=null){
+    
+        var savedScores = JSON.parse(localStorage.getItem('scores'));
 
-    console.log('savedScores', savedScores);
+        arrayScore=[...savedScores];
+        console.log('arrayScores', arrayScore)
+
+        console.log("**** SCORES *****");
+        arrayScore.forEach(element=>{
+            console.log(` Usuario ${element.userName} con puntuación : ${ element.points}.`);
+        });
+        console.log("*****************");
+    }
+    else { console.log(" No hay puntuaciones de partidas anteriores;")}
 
 }
 
