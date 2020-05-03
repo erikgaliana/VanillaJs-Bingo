@@ -13,7 +13,7 @@ function Bingo (){
     var bingoNumbers; 
     var bingoCard;
     var continueGame=false;
-    var lineCalled=false;
+    var lineCalled;
     var isLine=false;
     var isWinner=false;
     var arrayScore;
@@ -21,6 +21,7 @@ function Bingo (){
     
     do {
         
+        lineCalled=false;
 
         player ={ userName:"" , rounds:0, points:0};
     
@@ -28,6 +29,8 @@ function Bingo (){
         alert (`Bienvenido ${player.userName}`);
         
         arrayScore=[];//init array of scores before loading scores in local Storage;
+
+        //localStorage.removeItem('scores'); 
 
         getSavedScore (arrayScore);
 
@@ -48,6 +51,7 @@ function Bingo (){
             // again available
 
             bingoNumbers=[]; 
+
             initBingo(bingoNumbers);
             
             showCard(bingoCard);
@@ -59,10 +63,10 @@ function Bingo (){
 
         
 
-        console.log(" iniciando partida");
+        console.log("-------- iniciando partida ------------- ");
         
         do {
-                nextTurn=window.confirm("Avanzar al siguiente turno ?");
+                nextTurn=window.confirm("Acepta para iniciar turno nuevo , cancela para abandonar partida ?");
 
                 if(nextTurn) {
 
@@ -70,33 +74,30 @@ function Bingo (){
                     
                     player.rounds+=1;
                     
-
                     console.log(`turno : ${player.rounds}`);
 
                     showCard(bingoCard);
-                    
+                 
                     if ( isLine && !lineCalled) { 
                                                 alert( "LINEA");
                                                 lineCalled=true;  
-                                                player.points+=((45-player.rounds)*100);  
+                                                player.points+=((50-player.rounds)*25);  
                                                 }
                     isWinner=checkBingo(bingoCard);
                     if ( checkBingo(bingoCard)) { 
                         alert( " BINGO !!!!");
                         nextTurn=false;
-                        player.points+=((45-player.rounds)*100);
+                        player.points+=((50-player.rounds)*100);
                     }
                     console.log(`Puntuacion actual = ${player.points}`);
                 }
-               
+               console.log(`--------- FIN TURNO ${player.rounds} ---------------`);
             } while (nextTurn===true);
     
         isWinner? console.log(`Felicidades has ganado en ${player.rounds} turnos`): console.log (`Juego finalizado en ${player.rounds} turnos` );
         
         arrayScore.push({...player});
 
-        
-        
         sortScore(arrayScore);
         
         showScore( arrayScore);
@@ -119,7 +120,7 @@ function Bingo (){
 
 function initBingo(bingoNumbers){
     
-    for (var i=0; i<49; i++) {
+    for (var i=0; i<50; i++) {
         bingoNumbers.push(i+1);
     }
     
@@ -155,7 +156,6 @@ function randomNumber(bingoNumbers){
     chosenIndex= Math.floor(Math.random() * bingoNumbers.length);
     
     selectedNumber=bingoNumbers.splice(chosenIndex,1);
-    
     
     return selectedNumber[0];
 }
@@ -194,7 +194,6 @@ function showCard ( bingoCard){
 
 
 
-
 function checkCard (bingoCard,bingoNumbers){
     
    var newNumber= randomNumber(bingoNumbers);
@@ -230,6 +229,7 @@ function checkCard (bingoCard,bingoNumbers){
 }
 
 
+
 function checkLine ( bingoCard,i,j) {
   
     const arrayLine= bingoCard.slice(i,j).filter(element=>element.matched===true);
@@ -237,6 +237,8 @@ function checkLine ( bingoCard,i,j) {
     return ( arrayLine.length===5?  true : false);
     
 }
+
+
 
 function checkBingo( bingoCard) {
   
@@ -246,10 +248,14 @@ function checkBingo( bingoCard) {
     
 }
 
+
+
 function sortScore ( arrayScore) {
      
       arrayScore.sort(compare);
 }
+
+
 
 function compare(a, b) {
    
@@ -260,63 +266,33 @@ function compare(a, b) {
   }
 
 
+// saves scores in local storage
 function saveScore (arrayScore) {
-    /*
-    if ( localStorage.getItem('scores')!=null){ 
-
-        var savedScores = JSON.parse(localStorage.getItem('scores'));
-
-        var combinedArrays=[...savedScores,...arrayScore];
-
-        sortScore ( combinedArrays);
-        
-
-    localStorage.setItem('scores', JSON.stringify(combinedArrays));
-    }
-    else { 
-        sortScore ( arrayScore);
-        localStorage.setItem('scores', JSON.stringify(arrayScore));}
-
-    */
-
+    
    
 
-   //console.log('local storage before saving arrayScore',JSON.parse(localStorage.getItem('scores')));    
-
-   //localStorage.removeItem('scores');
-
-   //console.log('local storege after reset',JSON.parse(localStorage.getItem('scores')));  
-
    localStorage.setItem('scores', JSON.stringify(arrayScore));
-
-   //console.log('local store after saving arrayScore',JSON.parse(localStorage.getItem('scores')));
 
 }
 
 
-function getSavedScore (arrayScore) {
+// get stored scores from localStorage
 
-    console.log('data in local storage',JSON.parse(localStorage.getItem('scores')));
+function getSavedScore (arrayScore) {
 
     if ( localStorage.getItem('scores')!=null){
     
         
         var savedScores = JSON.parse(localStorage.getItem('scores'));
 
-        console.log(' savedScores', savedScores);
-        console.log('array score before setting to localstoragedata', arrayScore);
-
         savedScores.forEach(element=>{ arrayScore.push(element)});
-
-      
-        
-        
 
     }
     else { arrayScore=[];}
 
-
 }
+
+
 
 function showScore ( arrayScore) {
    
@@ -328,14 +304,6 @@ function showScore ( arrayScore) {
         });
         console.log("*****************");
     }
-    else { console.log(" No hay puntuaciones de partidas guardads;")}
+    else { console.log(" No hay puntuaciones de partidas anteriores")}
 
 }
-
-
-/*
-function generateNumber (){
-
-    return Math.floor(Math.random() * 99) + 1 ;
-
-}*/
